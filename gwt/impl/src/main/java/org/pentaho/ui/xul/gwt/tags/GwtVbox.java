@@ -12,35 +12,29 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
+ * Copyright (c) 2002-2023 Hitachi Vantara..  All rights reserved.
  */
 
 package org.pentaho.ui.xul.gwt.tags;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
+import org.pentaho.gwt.widgets.client.panel.VerticalFlexPanel;
 import org.pentaho.ui.xul.containers.XulVbox;
-import org.pentaho.ui.xul.dom.Element;
 import org.pentaho.ui.xul.gwt.AbstractGwtXulContainer;
-import org.pentaho.ui.xul.gwt.GwtXulHandler;
 import org.pentaho.ui.xul.gwt.GwtXulParser;
-import org.pentaho.ui.xul.gwt.util.GwtUIConst;
 import org.pentaho.ui.xul.stereotype.Bindable;
 import org.pentaho.ui.xul.util.Orient;
 
 public class GwtVbox extends AbstractGwtXulContainer implements XulVbox {
 
-  static final String ELEMENT_NAME = "vbox"; //$NON-NLS-1$
+  static final String ELEMENT_NAME = "vbox";
 
   private enum Property {
     PADDING
   }
 
   public static void register() {
-    GwtXulParser.registerHandler( ELEMENT_NAME, new GwtXulHandler() {
-      public Element newInstance() {
-        return new GwtVbox();
-      }
-    } );
+    GwtXulParser.registerHandler( ELEMENT_NAME, GwtVbox::new );
   }
 
   public GwtVbox() {
@@ -50,6 +44,7 @@ public class GwtVbox extends AbstractGwtXulContainer implements XulVbox {
   @Override
   public void setAttribute( String name, String value ) {
     super.setAttribute( name, value );
+
     try {
       Property prop = Property.valueOf( name.replace( "pen:", "" ).toUpperCase() );
       switch ( prop ) {
@@ -65,11 +60,13 @@ public class GwtVbox extends AbstractGwtXulContainer implements XulVbox {
   public GwtVbox( String elementName ) {
     super( elementName );
     this.orientation = Orient.VERTICAL;
-    VerticalPanel vp;
-    container = vp = new VerticalPanel();
+
+    VerticalPanel vbox = new VerticalFlexPanel();
+    container = vbox;
     setManagedObject( container );
-    vp.setSpacing( GwtUIConst.PANEL_SPACING ); // IE_6_FIX, move to CSS
-    vp.setStyleName( "vbox" ); //$NON-NLS-1$
+
+//    vbox.setSpacing( GwtUIConst.PANEL_SPACING ); // IE_6_FIX, move to CSS
+    vbox.addStyleName( ELEMENT_NAME );
   }
 
   @Override

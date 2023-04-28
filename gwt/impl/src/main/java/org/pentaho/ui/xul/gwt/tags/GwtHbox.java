@@ -12,18 +12,16 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
+ * Copyright (c) 2002-2023 Hitachi Vantara..  All rights reserved.
  */
 
 package org.pentaho.ui.xul.gwt.tags;
 
+import org.pentaho.gwt.widgets.client.panel.HorizontalFlexPanel;
 import org.pentaho.ui.xul.XulDomContainer;
 import org.pentaho.ui.xul.containers.XulHbox;
-import org.pentaho.ui.xul.dom.Element;
 import org.pentaho.ui.xul.gwt.AbstractGwtXulContainer;
-import org.pentaho.ui.xul.gwt.GwtXulHandler;
 import org.pentaho.ui.xul.gwt.GwtXulParser;
-import org.pentaho.ui.xul.gwt.util.GwtUIConst;
 import org.pentaho.ui.xul.stereotype.Bindable;
 import org.pentaho.ui.xul.util.Align;
 import org.pentaho.ui.xul.util.Orient;
@@ -32,14 +30,10 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 
 public class GwtHbox extends AbstractGwtXulContainer implements XulHbox {
 
-  static final String ELEMENT_NAME = "hbox"; //$NON-NLS-1$
+  static final String ELEMENT_NAME = "hbox";
 
   public static void register() {
-    GwtXulParser.registerHandler( ELEMENT_NAME, new GwtXulHandler() {
-      public Element newInstance() {
-        return new GwtHbox();
-      }
-    } );
+    GwtXulParser.registerHandler( ELEMENT_NAME, GwtHbox::new );
   }
 
   private enum Property {
@@ -51,17 +45,19 @@ public class GwtHbox extends AbstractGwtXulContainer implements XulHbox {
   public GwtHbox() {
     super( ELEMENT_NAME );
     this.orientation = Orient.HORIZONTAL;
-    HorizontalPanel hp;
-    container = hp = new HorizontalPanel();
-    setManagedObject( container );
-    hp.setSpacing( GwtUIConst.PANEL_SPACING ); // IE_6_FIX, move to CSS
-    hp.setStyleName( "hbox" );
 
+    HorizontalPanel hbox = new HorizontalFlexPanel();
+    container = hbox ;
+    setManagedObject( container );
+
+    // hp.setSpacing( GwtUIConst.PANEL_SPACING ); // IE_6_FIX, move to CSS
+    hbox.setStyleName( ELEMENT_NAME );
   }
 
   @Override
   public void setAttribute( String name, String value ) {
     super.setAttribute( name, value );
+
     try {
       Property prop = Property.valueOf( name.replace( "pen:", "" ).toUpperCase() );
       switch ( prop ) {
